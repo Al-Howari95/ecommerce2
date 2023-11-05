@@ -1,241 +1,232 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
-// import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
-// import { Link } from 'react-router-dom';
+const Details = () => {
+  const [counter, setCounter] = useState(1);
+  const [product, setProduct] = useState({});
+  const { Params } = useParams(); // Retrieve the blog ID from the route parameter
+  const [selectImage , setselectImage] = useState([]);
+  const [comment, setComment] = useState(""); // حالة التعليقات
+  const [comments, setComments] = useState([]); // قائمة التعليقات
+  const [selectedComment, setSelectedComment] = useState(null);
+   // التعليق المحدد للتعديل
 
-// const Product = () => {
-//   const [product_target, setproduct_target] = useState('');
-//   const [product_type, setproduct_type] = useState('');
-//   const [products, setProducts] = useState([]);
-//   const [currentPage, setCurrentPage] = useState(1); // Current page
-//   const [itemsPerPage] = useState(6); // Number of items to display per page
-  
-//   console.log(products)
-//   useEffect(() => {
-//     // استرداد البيانات من API عند تحميل المكون
-//     axios.get('http://localhost:4000/Data')
-//       .then((response) => setProducts(response.data))
-//       .catch((error) => console.error('حدث خطأ في جلب البيانات: ', error));
-//       console.log(products)
+  const incrementCounter = () => {
+    setCounter(counter + 1);
+  };
 
-//   }, []); // المصفوفة الفارغة تجعل الطلب يتم مرة واحدة عند التحميل الأول فقط
+  const decrementCounter = () => {
+    if (counter > 1) {
+      setCounter(counter - 1);
+    }
+  };
 
+  const addComment = () => {
+    if (comment.trim() !== "") {
+      // إضافة التعليق إلى قائمة التعليقات
+      setComments([...comments, comment]);
+      // مسح مربع النص بعد إضافة التعليق
+      setComment("");
+    }
+  };
 
+  const editComment = () => {
+    if (selectedComment !== null) {
+      // يمكنك هنا تنفيذ منطق تحديث التعليق المحدد
+      // بناءً على قيمة `selectedComment`
+      // يمكنك تحديث التعليق في قائمة التعليقات
+      // ثم مسح حالة `selectedComment`
+      setSelectedComment(null);
+    }
+  };
 
-//   const filteredProducts = products.filter((product) => {
-//     if (product_target === 'Men' || product_target === 'Women' || product_target === 'Children') {
-//       return (
-//         product.product_target === product_target &&
-//         (product_type === '' || product.product_type === product_type)
-//       );
-//     }
-//     return true; // عرض جميع المنتجات عندما تكون الفئة غير محددة.
-//   });
+  const deleteComment = () => {
+    if (selectedComment !== null) {
+      // يمكنك هنا تنفيذ منطق حذف التعليق المحدد
+      // من قائمة التعليقات
+      // ثم مسح حالة `selectedComment`
+      setSelectedComment(null);
+    }
+  };
 
-// //   Calculate the index of the first and last item on the current page
-//   const indexOfLastItem = currentPage * itemsPerPage;
-//   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-//   const currentItems = filteredProducts.slice(indexOfFirstItem, indexOfLastItem);
+  useEffect(() => {
+    // Make an Axios GET request to your server's API endpoint for product details
+    console.log(Params)
+    axios.get(`http://localhost:4000/Data?product_id=${Params}`)
 
-//   // Change page
-//   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+      .then(response => {
+        // Assuming the response data has fields like 'name' and 'description'
+        setProduct(response.data[0]);
+        setselectImage(response.data[0].imageUrl[0])
+      })
+      .catch(error => {
+        console.error('Error fetching product details:', error);
+      });
+      // console.log("hhhh",product)
+      // console.log("jjjjj",blogId)
 
-//     return (
-//     <div>
+  }, [Params]);
+
+  const totalPrice = (product.product_price * counter).toFixed(2);
+console.log(product.imageUrl)
+  return (
+    <div>
+      {/* Component */}
+      <section className="text-gray-700 body-font overflow-hidden bg-white">
+        <div className="container px-5 py-24 mx-auto">
+          <div className="lg:w-4/5 mx-auto flex flex-wrap">
+            <img
+              alt="ecommerce"
+              className="lg:w-1/2 w-full object-cover object-center rounded border border-gray-200"
+              src={selectImage}
+            />
+            <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
         
-//       <div className="text-center p-10">
-//         <h1 className="font-bold text-4xl mb-4">Clothes</h1>
-//       </div>
-//       <div className="text-center">
-// <div className="mb-4">
-//   <label htmlFor="categorySelect" className="block font-medium text-lg text-gray-600 mb-2">
-//     Select Category:
-//   </label>
-//   <select
-//     id="categorySelect"
-//     value={product_target}
-//     onChange={(e) => setproduct_target(e.target.value)}
-//     className="block w-full p-3 border border-orange-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-//   >
-//     <option value="#">Select</option>
-//     <option value="Men">Men</option>
-//     <option value="Women">Women</option>
-//     <option value="Children">Children</option>
-//   </select>
-// </div>
-
-//         {product_target === 'Men' || product_target === 'Women' || product_target === 'Children' ? (
-//    <div className="mb-4">
-//    <label htmlFor="subcategorySelect" className="block font-medium text-lg text-gray-600 mb-2">
-//      Select Subcategory:
-//    </label>
-//    <select
-//      id="product_typeSelect"
-//      value={product_type}
-//      onChange={(e) => setproduct_type(e.target.value)}
-//      className="block w-full p-2 border border-orange-300 rounded-md text-gray-700 focus:ring focus:ring-indigo-300 focus:outline-none"
-//    >
-//      <option value="">All</option>
-//      {product_target === 'Men' && (
-//        <>
-//          <option value="Pants">Pants</option>
-//          <option value="Shirts">Shirts</option>
-//          <option value="Jackets">Jackets</option>
-//        </>
-//      )}
-//      {product_target === 'Women' && (
-//        <>
-//          <option value="Pants">Pants</option>
-//          <option value="Shirts">Shirts</option>
-//          <option value="Jackets ">Jackets </option>
-//        </>
-//      )}
-//      {product_target === 'Children' && (
-//        <>
-//          <option value="Pants">Pants</option>
-//          <option value="Shirts">Shirts</option>
-//          <option value="Jackets">Jackets</option>
-//        </>
-//      )}
-//    </select>
-//  </div>
- 
-//         ) : null}
-//       </div>
-//       <section
-//         id="Projects"
-//         className="w-fit mx-auto grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-20 gap-x-14 mt-10 mb-5"
-//       >
-//         {currentItems.map((product, index) => (
-//           <div
-//             key={index}
-//             className="w-72 bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl"
-//           >
-         
-
-//             <Link to = {`/Details/${product.product_id}`} >
-                
-//               <img
-//                 src={product.imageUrl}
-//                 alt={product.product_name}
-//                 className="h-80 w-72 object-cover rounded-t-xl"
-                
-//               />
-//                 <button id='laith' className="p-2 rounded-full bg-blue-600 text-white mx-5 -mb-4 hover:bg-blue-500 focus:outline-none focus:bg-blue-500">
-//               <svg
-//                 className="h-5 w-5"
-//                 fill="none"
-//                 strokeLinecap="round"
-//                 strokeLinejoin="round"
-//                 strokeWidth={2}
-//                 viewBox="0 0 24 24"
-//                 stroke="currentColor"
-//               >
-//                 <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-//               </svg>
-//             </button>
-              
-//               <div className="px-4 py-3 w-72">
-//                 <span className="text-gray-400 mr-3 uppercase text-xs">Brand</span>
-                
-//                 <p className="text-lg font-bold text-black truncate block capitalize">
-//                   {product.product_name}
-//                 </p>
-//                 <p className="text-lg  text-black truncate block capitalize">
-//                   {product.product_subDescription}
-//                 </p>
-             
-//                 <div className="flex items-center">
-//                   <p className="text-lg font-semibold text-black cursor-auto my-3">
-//                     {product.product_price}
-//                   </p>
-                  
-//                     {/* <p className="text-sm text-gray-600 cursor-auto ml-2">
-//                       {product.product_rate}
-//                     </p>  */}
-                    
-              
-//                   <div className="ml-auto">
-//                     <svg
-//                       xmlns="http://www.w3.org/2000/svg"
-//                       width={20}
-//                       height={20}
-//                       fill="currentColor"
-//                       className="bi bi-bag-plus"
-//                       viewBox="0 0 16 16"
-//                     >
-//                       {/* أضف مسار SVG الخاص بك هنا */}
-//                     </svg>
-                    
-//                   </div>
-//                   <span class="flex items-center">
-//             <svg fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 text-red-500" viewBox="0 0 24 24">
-//               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-//             </svg>
-//             <svg fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 text-red-500" viewBox="0 0 24 24">
-//               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-//             </svg>
-//             <svg fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 text-red-500" viewBox="0 0 24 24">
-//               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-//             </svg>
-//             <svg fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 text-red-500" viewBox="0 0 24 24">
-//               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-//             </svg>
-//             <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 text-red-500" viewBox="0 0 24 24">
-//               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-//             </svg>
-//             <span class="text-gray-600 ml-3">{product.product_rate}</span>
-//           </span>
-//                 </div>
-//               </div>
-//             </Link>
-            
-//           </div>
+              <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">
+              {product.product_name}</h1>
+              <h2 className="text-sm title-font text-gray-500 tracking-widest">
+              {product.product_subDescription}</h2><br></br>
           
-//         ))}
-//       </section>
-//            {/* Pagination controls */}
-//            <div className="text-center">
-//         <ul className="flex justify-center">
-//           {Array(Math.ceil(filteredProducts.length / itemsPerPage))
-//             .fill()
-//             .map((_, index) => (
-//               <li key={index}>
-//                 <button
-//                   className={`p-2 mx-2 rounded-lg ${
-//                     currentPage === index + 1 ? 'bg-orange-500 text-white' : 'bg-orange-300 text-gray-700'
-//                   }`}
-//                   onClick={() => paginate(index + 1)}
-//                 >
-//                   {index + 1}
-//                 </button>
-//               </li>
-//             ))}
-//         </ul>
-//       </div>
+              <div className="flex mb-4">
+              <span class="flex items-center">
+            <svg fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 text-red-500" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+            </svg>
+            <svg fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 text-red-500" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+            </svg>
+            <svg fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 text-red-500" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+            </svg>
+            <svg fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 text-red-500" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+            </svg>
+            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 text-red-500" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+            </svg>
+            <span class="text-gray-600 ml-3">{product.product_rate}</span>
+          </span>
+             
+              </div>
+              <p className="leading-relaxed"> {product.product_description}</p>
+              <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-200 mb-5">
+                <div className="flex">
+                  <span className="mr-3">Color</span>
+                  <button onClick={()=>
+                  {
+                    setselectImage(product.imageUrl[0])
+                  }}
+                   className="border-2 border-gray-300 rounded-full w-6 h-6 focus:outline-none" /> 
+                  <button  onClick={()=>
+                  {
+                    setselectImage(product.imageUrl[1])
+                  }}
+                  className="border-2 border-gray-300 ml-1 bg-gray-700 rounded-full w-6 h-6 focus:outline-none" />
+                  <button onClick={()=>
+                  {
+                    setselectImage(product.imageUrl[2])
+                  }}
+                  className="border-2 border-gray-300 ml-1 bg-red-500 rounded-full w-6 h-6 focus:outline-none" />
+                </div>
+                <div className="flex ml-6 items-center">
+                  <span className="mr-3">Size</span>
+                  <div className="relative">
+                    <select className="rounded border appearance-none border-gray-400 py-2 focus:outline-none focus:border-red-500 text-base pl-3 pr-10">
+                      <option>SM</option>
+                      <option>M</option>
+                      <option>L</option>
+                      <option>XL</option>
+                    </select>
+                    <span className="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
+                      <svg
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        className="w-4 h-4"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M6 9l6 6 6-6" />
+                      </svg>
+                    </span>
+                  </div>
+                  <div className="mt-4">
+                    
+                  <button
+                className="border-2 border-gray-300 rounded-full w-8 h-8 focus:outline-none"
+                onClick={decrementCounter}
+              >
+                -
+              </button>
+              <span className="m-3">{counter}</span>
+              <button
+                className="border-2 border-gray-300 ml-1 rounded-full w-8 h-8 focus:outline-none"
+                onClick={incrementCounter}
+              >
+                +
+              </button>
+      </div>
+                </div> 
+                      {/* Counter section */}
+   
+              </div>
+              
+              <div className="flex">
+            <span className="title-font font-medium text-2xl text-gray-900">
+            ${totalPrice}
+            
+            </span>
+            <button className="flex ml-auto text-white bg-orange-500 border-0 py-2 px-6 focus:outline-none hover-bg-red-600 rounded">
+              ORDER NOW
+            </button>
+            
+            <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
+              <svg
+                fill="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                className="w-5 h-5"
+                viewBox="0 0 24 24"
+              >
+                <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06-1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+              </svg>
+                </button>
+                
+              </div>
+              <h3 id='kj' className="text-sm title-font text-gray-500 tracking-widest">
+              {product.product_origin}</h3>
+              <h3 id='kj' className="text-sm title-font text-gray-500 tracking-widest">
+              {product.product_fabricType}</h3>
+        
+            </div>
+            
+          </div>
+          
+        </div>
+        
+      </section>
+      <div className="textarea-container">
+
+      <textarea
+                placeholder="Add Comment"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              ></textarea>
+              <button onClick={addComment}>Add Comment</button>
+              {comments.map((comment, index) => (
+                <div key={index}>{comment}</div>
+                
+              ))}
+
+              
+              </div>
+
+    </div>
     
- 
-//     </div>
-    
-//   );
-// };
+  );
+};
 
-// export default Product;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default Details;

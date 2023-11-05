@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import Comment from './Comment';
 
 const Details = () => {
   const [counter, setCounter] = useState(1);
@@ -170,12 +171,10 @@ console.log(product.imageUrl)
               <h3 id='kj' className="text-sm title-font text-gray-500 tracking-widest">
               {product.product_fabricType}</h3>
             </div>
-            
+            <Comment/>
           </div>
         </div>
-        
       </section>
-        ء 
     </div>
   );
 };

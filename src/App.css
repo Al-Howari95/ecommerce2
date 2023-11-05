@@ -77,3 +77,39 @@ body{
 }
 
 
+/* .textarea-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.textarea-container textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: none;
+  font-size: 16px;
+}
+
+.textarea-container button {
+  background-color: rgb(249 115 22);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+} */
+
+#but {
+  background-color: rgb(249 115 22);
+  font-size: large;
+  font-weight: 600;
+}
+
+#comment {
+  width: 615px;
+}
+
+
