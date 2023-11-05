@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Buttonup from './Buttonup';
 
 const Product = () => {
   const [product_target, setproduct_target] = useState('');
@@ -21,9 +22,7 @@ const Product = () => {
 
   }, []); // المصفوفة الفارغة تجعل الطلب يتم مرة واحدة عند التحميل الأول فقط
 
-  const handleScrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+
 
   const filteredProducts = products.filter((product) => {
     if (product_target === 'Men' || product_target === 'Women' || product_target === 'Children') {
@@ -90,7 +89,7 @@ const Product = () => {
        <>
          <option value="Pants">Pants</option>
          <option value="Shirts">Shirts</option>
-         <option value="Jackets ">Jackets </option>
+         <option value="Jackets">Jackets</option>
        </>
      )}
      {product_target === 'Children' && (
@@ -150,7 +149,7 @@ const Product = () => {
              
                 <div className="flex items-center">
                   <p className="text-lg font-semibold text-black cursor-auto my-3">
-                    {product.product_price}
+                    ${product.product_price}
                   </p>
                   
                     {/* <p className="text-sm text-gray-600 cursor-auto ml-2">
@@ -216,22 +215,7 @@ const Product = () => {
             ))}
         </ul>
       </div>
-      <button
-        className="fixed bottom-10 right-10 p-4 rounded-full bg-orange-600 text-white hover:bg-orange-500 focus:outline-none focus:bg-orange-500"
-        onClick={handleScrollToTop}
-      >
-        <svg
-          className="h-6 w-6"
-          fill="none"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path d="M5 10l7-7m0 0l7 7m-7-7v18" />
-        </svg>
-      </button> 
+      <Buttonup/>
  
     </div>
     

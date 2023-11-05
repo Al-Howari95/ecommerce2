@@ -16,10 +16,12 @@ function App() {
     <div className="App">
 <BrowserRouter>
  
-  
+{/* <Dash/> */}
+
  <Routes>
  <Route path="/" element={<Product />} />
  <Route path="/Details/:Params" element={<Details />} />
+
 
  </Routes>
 
