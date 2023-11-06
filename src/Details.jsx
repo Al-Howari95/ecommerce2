@@ -6,8 +6,10 @@ import Comment from './Comment';
 const Details = () => {
   const [counter, setCounter] = useState(1);
   const [product, setProduct] = useState({});
-  const { Params } = useParams(); // Retrieve the blog ID from the route parameter
-  const [selectImage , setselectImage] = useState([]);
+  const { Params } = useParams(); // Retrieve the product ID from the route parameter
+  const [selectImage, setSelectImage] = useState([]);
+  const [cart, setCart] = useState([]); // Maintain cart data as an array
+
   const incrementCounter = () => {
     setCounter(counter + 1);
   };
@@ -18,28 +20,38 @@ const Details = () => {
     }
   };
 
-
-
   useEffect(() => {
     // Make an Axios GET request to your server's API endpoint for product details
-    console.log(Params)
     axios.get(`http://localhost:4000/Data?product_id=${Params}`)
-
       .then(response => {
-        // Assuming the response data has fields like 'name' and 'description'
         setProduct(response.data[0]);
-        setselectImage(response.data[0].imageUrl[0])
+        setSelectImage(response.data[0].imageUrl[0]);
       })
       .catch(error => {
         console.error('Error fetching product details:', error);
       });
-      // console.log("hhhh",product)
-      // console.log("jjjjj",blogId)
-
   }, [Params]);
 
   const totalPrice = (product.product_price * counter).toFixed(2);
-console.log(product.imageUrl)
+
+  // Add the product to the cart when the "Add to Cart" button is clicked
+  const addToCart = () => {
+    const newCartItem = {
+      product: product,
+      quantity: counter,
+      totalPrice: totalPrice,
+    };
+
+    // Send a POST request to update the server JSON data
+    axios.post('http://localhost:4000/add', newCartItem)
+      .then(response => {
+        alert('Cart updated successfully:', response.data);
+        // You can handle the response as needed
+      })
+      .catch(error => {
+        alert('Error updating cart:', error);
+      });
+  };
   return (
     <div>
       {/* Component */}
@@ -85,17 +97,17 @@ console.log(product.imageUrl)
                   <span className="mr-3">Color</span>
                   <button onClick={()=>
                   {
-                    setselectImage(product.imageUrl[0])
+                    setSelectImage(product.imageUrl[0])
                   }}
                    className="border-2 border-gray-300 rounded-full w-6 h-6 focus:outline-none" /> 
                   <button  onClick={()=>
                   {
-                    setselectImage(product.imageUrl[1])
+                    setSelectImage(product.imageUrl[1])
                   }}
                   className="border-2 border-gray-300 ml-1 bg-gray-700 rounded-full w-6 h-6 focus:outline-none" />
                   <button onClick={()=>
                   {
-                    setselectImage(product.imageUrl[2])
+                    setSelectImage(product.imageUrl[2])
                   }}
                   className="border-2 border-gray-300 ml-1 bg-red-500 rounded-full w-6 h-6 focus:outline-none" />
                 </div>
@@ -148,22 +160,13 @@ console.log(product.imageUrl)
             ${totalPrice}
             
             </span>
-            <button className="flex ml-auto text-white bg-orange-500 border-0 py-2 px-6 focus:outline-none hover-bg-red-600 rounded">
-              ORDER NOW
-            </button>
+          <button
+          onClick={addToCart} // Call addToCart function when the button is clicked
+          className="flex ml-auto text-white bg-orange-500 border-0 py-2 px-6 focus:outline-none hover-bg-red-600 rounded">
+          ADD TO CART
+        </button>
             
-            <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
-              <svg
-                fill="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                className="w-5 h-5"
-                viewBox="0 0 24 24"
-              >
-                <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06-1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
-              </svg>
-                </button>
+       
                 
               </div>
               <h3 id='kj' className="text-sm title-font text-gray-500 tracking-widest">

@@ -1,6 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react';
 
 const Dash = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <div>
         <>
@@ -14,8 +20,9 @@ const Dash = () => {
           </h6>
         </a>
         <button
-          className="middle none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-8 max-w-[32px] h-8 max-h-[32px] rounded-lg text-xs text-white hover:bg-white/10 active:bg-white/30 absolute right-0 top-0 grid rounded-br-none rounded-tl-none xl:hidden"
-          type="button"
+        className="middle none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-8 max-w-[32px] h-8 max-h-[32px] rounded-lg text-xs text-white hover:bg-white/10 active:bg-white/30 absolute right-0 top-0 grid rounded-br-none rounded-tl-none xl:hidden"
+        type="button"
+       
         >
           <span className="absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2">
             <svg
@@ -23,7 +30,7 @@ const Dash = () => {
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth="2.5"
-              stroke="currentColor"
+              stroke="currentColor"S
               aria-hidden="true"
               className="h-5 w-5 text-white"
             >
@@ -62,7 +69,8 @@ const Dash = () => {
           </li>
           <li>
             <a className="" href="#">
-              <button
+              <button  
+   
                 className="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white hover:bg-white/10 active:bg-white/30 w-full flex items-center gap-4 px-4 capitalize"
                 type="button"
               >
@@ -82,6 +90,7 @@ const Dash = () => {
                 <p className="block antialiased font-sans text-base leading-relaxed text-inherit font-medium capitalize">
                   profile
                 </p>
+                
               </button>
             </a>
           </li>
@@ -230,9 +239,10 @@ const Dash = () => {
                 </label>
               </div>
             </div>
-            <button
+            <button  
               className="relative middle none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-gray-500 hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30 grid xl:hidden"
               type="button"
+              onClick={toggleSidebar}
             >
               <span className="absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2">
                 <svg

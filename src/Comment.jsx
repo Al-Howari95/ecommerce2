@@ -9,7 +9,7 @@ const Comment = () => {
 
   useEffect(() => {
     // استرجاع البيانات عند تحميل المكون
-    axios.get('http://localhost:3001/comments')
+    axios.get('http://localhost:4000/massge')
       .then((response) => {
         setComments(response.data);
       })
